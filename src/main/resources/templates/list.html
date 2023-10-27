@@ -29,6 +29,36 @@
             margin : 2px;
         }
 
+        /* CSS 스타일링 */
+.notification {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top: 1px solid #ccc; /* 위쪽에만 줄 추가 */
+    border-bottom: 1px solid #ccc; /* 아래쪽에만 줄 추가 */
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.notification p {
+    margin: 0;
+}
+
+.notification .email {
+    flex: 1;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.notification .message {
+    flex: 2;
+    margin-right: 10px;
+}
+
+.notification .date {
+    flex: 1;
+}
+
 
 
     </style>
@@ -271,75 +301,60 @@
 
 <!-- 자체 작성한 JavaScript 코드 -->
 <script>
-    // 서버에서 알림 데이터를 가져와 동적으로 렌더링하는 함수
-    function loadNotifications() {
-        $.ajax({
-            url: "/boardnotification/read", // 알림 데이터를 제공하는 엔드포인트
-            method: "GET",
-            dataType: "json",
-            success: function(data) {
-                // 알림 데이터를 동적으로 렌더링합니다.
-                const notificationContainer = $("#notification-container");
 
-                data.forEach(function(notification) {
-                    // 알림을 동적으로 생성하여 추가합니다.
-                    const notificationElement = `
-                        <div class="notification">
-                            <p>${notification.replyemail}</p>
-                            <p>${notification.message}</p>
-                            <p>${notification.rdate}</p>
-                        </div>
-                    `;
-                    notificationContainer.append(notificationElement);
-                });
-            },
-            error: function(error) {
-                console.error("Error fetching notifications: " + error);
-            }
-        });
-    }
+   // 서버에서 알림 데이터를 가져와 동적으로 렌더링하는 함수
+function loadNotifications() {
+    $.ajax({
+        url: "/boardnotification/read",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            const notificationContainer = $("#notification-container");
 
-    // 페이지가 로드될 때 알림을 가져와서 렌더링합니다.
-    $(document).ready(function() {
-        loadNotifications();
+            data.forEach(function(notification) {
+
+                const notificationElement = `
+                    <div class="notification">
+                        <p class="email">${notification.replyemail}</p>
+                        <p class="message">${notification.message}</p>
+                        <p class="date">${notification.rdate}</p>
+                    </div>
+                `;
+                notificationContainer.append(notificationElement);
+            });
+        },
+        error: function(error) {
+            console.error("Error fetching notifications: " + error);
+        }
     });
+}
+
+$(document).ready(function() {
+    loadNotifications();
+});
+
+
+
+    //----------------------------------------------------------------
+  // LocalDateTime Formatter
+  //----------------------------------------------------------------
+  const formatter = (regDate)=>{
+    // 분리한 정보를 사용하여 Date 객체를 생성합니다.
+    const year = parseInt(regDate[0]);
+    const month = parseInt(regDate[1]) - 1; // 월은 0부터 시작하므로 1을 빼줍니다.
+    const day = parseInt(regDate[2]);
+    const hours = parseInt(regDate[3]);
+    const minutes = parseInt(regDate[4]);
+    const seconds = parseInt(regDate[5]);
+
+    const date = new Date(year, month, day, hours, minutes, seconds);
+
+    // Date 객체를 원하는 형식으로 포맷팅합니다.
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+
+    return formattedDate;
+  };
 </script>
-
-
-<!--<script>-->
-<!--    document.addEventListener('DOMContentLoaded', function () {-->
-
-<!--        var boardItems = document.querySelectorAll('.board-item');-->
-
-<!--        console.log(boardItems);-->
-
-<!--        boardItems.forEach(function (item) {-->
-
-<!--            var boardNumber = item.getAttribute('data-board-number');-->
-
-<!--            console.log(boardNumber);-->
-
-<!--            var replyCountElement = item.querySelector('.reply-count');-->
-
-<!--            //boardNumber를 사용하여 getReplyCount 호출-->
-<!--            getReplyCount(boardNumber, replyCountElement);-->
-<!--        });-->
-<!--    });-->
-
-<!--    function getReplyCount(boardNumber, replyCountElement) {-->
-
-<!--        fetch('/getReplyCount/' + boardNumber) // 서비스 엔드포인트 URL-->
-<!--            .then(function (response) {-->
-<!--                return response.json();-->
-<!--            })-->
-<!--            .then(function (data) {-->
-<!--                replyCountElement.textContent = data.replyCount;-->
-<!--            })-->
-<!--            .catch(function (error) {-->
-<!--                console.error('댓글 수를 가져오는 중 오류 발생: ' + error);-->
-<!--            });-->
-<!--    }-->
-<!--</script>-->
 
 <script>
 

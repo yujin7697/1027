@@ -29,12 +29,12 @@ public class BoardNotificationController {
         System.out.println("writeemail : " + writeemail);
         List<BoardNotification> list =  notificationRepository.findAllByWriteemail(writeemail);
 
-        //읽음 처리
-        for(BoardNotification boardNotification : list) {
-            System.out.println(boardNotification);
-            boardNotification.setIsread(true);  //읽음처리
-            notificationRepository.save(boardNotification);//저장
-        }
+//        //읽음 처리
+//        for(BoardNotification boardNotification : list) {
+//            System.out.println(boardNotification);
+//            boardNotification.setIsread(true);  //읽음처리
+//            notificationRepository.save(boardNotification);//저장
+//        }
        return list;
 
     }

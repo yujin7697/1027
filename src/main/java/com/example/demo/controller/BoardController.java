@@ -350,6 +350,6 @@ public class BoardController {
         }
         return "nampage";
     }
-
+//gkdlgkdl
 
 }
